@@ -1,0 +1,21 @@
+## For IntelliJ
+*/out/
+#*/lib/
+*/.idea/
+*.class
+*.iml
+LICENSE
+README.md
+
+
+## For Maven Projects
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
