@@ -1,0 +1,121 @@
+Deveop tools：
+        IDEA：IntelliJ IDEA 2017.2.5 Build #IU-172.4343.14, built on September 26, 2017
+        MariaDB： mysql  Ver 15.1 Distrib 10.2.8-MariaDB, for Linux (x86_64) using readline 5.1
+        Windows 8.1 6.3
+        java version "1.8.0_144"
+        Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
+        Java HotSpot(TM) 64-Int Server VM (build 25.144-b01, mixed mode)
+        Web Service:Tomcat:8.5.20
+
+MVC:
+        View:           JSP
+        Controler:      Servlet
+        Model:          JavaBean
+
+Project :
+        └─EnterpriseDailyAffairs
+            ├─.idea
+            │  ├─artifacts
+            │  └─inspectionProfiles
+            ├─src                     java 类源文件
+            │  └─com
+            │      └─eda
+            │          ├─bean         VO 类
+            │          ├─dao          数据库操作接口
+            │          ├─daoImpl      数据库操作类
+            │          ├─factory      数据库操作类工厂
+            │          ├─servlet      Servlet
+            │          └─util         工具类
+            └─web
+                ├─CSS                 CSS 文件
+                ├─fckeditor           FCKEditor 文件
+                ├─images              图片文件
+                └─WEB-INF
+
+数据库：
+        name:   db_affaimanage
+        talbes: tb_employee     员工信息表
+                tb_message      消息信息表
+                tb_reply        消息回复表
+                tb_criticism    消息批复表
+
+        tb_employee     员工信息表
+                        employeeID      int     pk（主键）      员工编号
+                        employeeName    varchar                 员工姓名
+                        employeeSex     int                     员工性别
+                        employeeBirth   date                    出生日期
+                        employeePhone   varchar                 办公电话
+                        employeePlace   varchar                 住址
+                        joinTime        date                    录入时间
+                        password        varchar                 系统口令
+                        isLead          int                     是否为管理层人员
+
+        tb_message      消息信息表
+                        messageID       int     oi（自增）      消息ID
+                        messageTitle    varchar                 消息标题
+                        messageContext  Text                    消息内容
+                        employeeID      int     fk（外键）      发布人
+                        publishTime     datetime                发布时间
+
+        tb_reply        消息回复表
+                        replyID         int     oi              消息回复ID
+                        replyContent    Text                    回复内容
+                        employeeID      int     fk              回复人
+                        replyTime       datetime                回复时间
+                        messageID       int     fk              消息ID
+
+        tb_criticism    消息批复表
+                        criticismID     int     oi              消息批复ID
+                        criticismContent Text                   批复内容
+                        employeeID      int     fk              批复人
+                        criticismTime   datetime                批复时间
+                        messageID       int     fk              消息ID
+
+CREATE USER 'javaweb'@'%' IDENTIFIED BY 'javaweb';
+
+CREATE DATABASE IF NOT EXISTS db_affairmanage;
+
+GRANT ALL PRIVILEGES ON db_affairmanage.* TO 'javaweb'@'%';
+
+USE db_affairmanage;
+
+CREATE TABLE IF NOT EXISTS tb_employee (
+       employeeID   int(11)            primary key  not null  AUTO_INCREMENT,
+       employeeName varchar(20)        not null,
+       employeeSex  int(2)             not null,
+       employeeBirth date,
+       employeePhone varchar(22),
+       employeePlace varchar(50),
+       joinTime      date,
+       password      varchar(20),
+       isLead        int(2)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+create table if not exists tb_message(
+       messageID    int(11)     primary key not null auto_increment,
+       messageTitle varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci not null,
+       messageConten text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+       employeeID    int(11)        not null,
+       publishTime   datetime,
+       constraint foreign key (employeeID) references tb_employee(employeeID)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+create table if not exists tb_reply(
+       replyID  int(11)    primary key not null auto_increment,
+       replyContent text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+       employeeID   int(11)        not null,
+       replyTime    datetime,
+       messageID    int(11)     not null,
+       constraint foreign key (employeeID) references tb_employee(employeeID),
+       constraint foreign key (messageID) references tb_message(messageID)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+create table if not exists tb_criticism(
+       criticismID  int(11)     primary key not null auto_increment,
+       criticismContent text    CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+       employeeID       int(11) not null,
+       criticismTime    datetime,
+       messageID        int(11) not null,
+       constraint foreign key (employeeID) references tb_employee(employeeID),
+       constraint foreign key (messageID) references tb_message(messageID)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
